@@ -16,3 +16,12 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::get('check',function(Request $request){
+    echo "server's up!";
+});
+
+Route::post('pop-logs','TestController@popLogs');
+Route::post('fill-all','TestController@fillAll');
+
