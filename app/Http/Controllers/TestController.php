@@ -14,6 +14,7 @@ use App\PopLogsHelper\PopLogsHelper;
 use GuzzleHttp;
 class TestController extends Controller {
 
+    private $responses = [];
     public function popLogs(Request $request,PopLogsHelper $popLogsHelper){
 
         $popLogsHelper->help(10);
@@ -25,35 +26,42 @@ class TestController extends Controller {
 
 
 
-    public function fillAll(Request $request,GuzzleHttp\Client $client){
+    public function fillAll(Request $request){
 
 
 
-
-
-        
         /**
+         *
+         * GUZZLE
+         *
          * follows configuration found at
-         * https://laravelcode.com/post/laravel-55-how-to-make-curl-http-request-example
+         * https://github.com/guzzle/guzzle
          */
 
+        $gClient = new GuzzleHttp\Client();
+
+
+
+
         $url = 'http://mthp.local/api/pop-logs';
-
-        $ch = curl_init($url);
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-        curl_setopt($ch, CURLOPT_URL,$url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch,CURLOPT_CUSTOMREQUEST , "POST");
-        curl_setopt($ch,CURLOPT_TIMEOUT,30000);
-
-        $output = curl_exec ($ch);
-        $info = curl_getinfo($ch);
-        $http_result = $info;
-        curl_close ($ch);
+        $fillElementFactor  = 10;
 
 
-        return  json_encode($http_result);
+
+
+
+        // Send an asynchronous request.
+        $guzzleRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
+        $promise = $gClient->sendAsync($guzzleRequest)->then(function ($response) {
+           array_push($this->responses,$response);
+        });
+        $promise->wait();
+        return  json_encode($this->responses);
+
+
+
+
+
 
 
     }
