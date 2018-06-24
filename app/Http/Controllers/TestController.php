@@ -52,11 +52,17 @@ class TestController extends Controller {
 
         // Send an asynchronous request.
         $guzzleRequest = new \GuzzleHttp\Psr7\Request('POST', $url);
-        $promise = $gClient->sendAsync($guzzleRequest)->then(function ($response) {
-           array_push($this->responses,$response);
-        });
-        $promise->wait();
-        return  json_encode($this->responses);
+
+
+        $promises = [];
+        foreach (range(0,$fillElementFactor) as $x){
+            $promise = $gClient->sendAsync($guzzleRequest)->then(function ($response) {
+               array_push($this->responses,$response);
+            });
+            $promise->wait();
+        }
+
+        return  "all invoked";
 
 
 
