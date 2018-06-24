@@ -28,6 +28,10 @@ class TestController extends Controller {
     public function fillAll(Request $request,GuzzleHttp\Client $client){
 
 
+
+
+
+        
         /**
          * follows configuration found at
          * https://laravelcode.com/post/laravel-55-how-to-make-curl-http-request-example
